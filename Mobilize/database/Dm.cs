@@ -8,6 +8,7 @@ namespace Mobilize.database
     {
         public SqlConnection connection;
 
+
         public void ConnectDb()
         {
             string connectionString =
@@ -20,7 +21,7 @@ namespace Mobilize.database
             }
             catch (SqlException sql)
             {
-                MessageBox.Show("Error when connecting to database. Wrong Username or Password!");
+                MessageBox.Show(@"Emai must be followed the format");
                 connection.Close();
                 Environment.Exit(0);
             }
@@ -64,12 +65,11 @@ namespace Mobilize.database
                 {
                    cmd.Parameters.AddWithValue("@" + parameters[j], values[j]);
                 }
-
                 row = cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unknow error at insertdata function");
+                MessageBox.Show(@"Unknow error at insertdata function " + ex.Message);
                 connection.Close();
             }
             return row;
@@ -106,7 +106,7 @@ namespace Mobilize.database
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unknow error at updatedata function");
+                MessageBox.Show(@"Emai must be followed the format");
                 connection.Close();
             }
             return row;
@@ -131,7 +131,7 @@ namespace Mobilize.database
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unknow error at deletedata function");
+                MessageBox.Show(@"Emai must be followed the format");
                 connection.Close();
             }
             return row;

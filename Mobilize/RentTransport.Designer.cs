@@ -163,6 +163,7 @@
             this.txtTime.Name = "txtTime";
             this.txtTime.Size = new System.Drawing.Size(87, 20);
             this.txtTime.TabIndex = 13;
+            this.txtTime.TextChanged += new System.EventHandler(this.txtTime_TextChanged);
             // 
             // label7
             // 

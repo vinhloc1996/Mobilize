@@ -10,6 +10,7 @@ namespace Mobilize
     {
         private Dm dm;
         private int id_transport = 0;
+        private string emails;
         private string name;
         private string type;
         private double price;
@@ -20,6 +21,7 @@ namespace Mobilize
             DisplayData();
 //            lblEmail.Text = email;
             this.Text = "Mobilize - " + email;
+            emails = email;
         }
 
         public int Get_Id()
@@ -36,7 +38,7 @@ namespace Mobilize
         {
             dm.ConnectDb();
             DataTable dataTable = new DataTable();
-            SqlDataAdapter adapt = new SqlDataAdapter("SELECT * FROM Transports", dm.connection);
+            SqlDataAdapter adapt = new SqlDataAdapter("SELECT * FROM Vehicles", dm.connection);
             adapt.Fill(dataTable);
             dataGridView1.DataSource = dataTable;
             dataGridView1.Columns[0].Visible = false;
@@ -78,7 +80,6 @@ namespace Mobilize
             name = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
             type = dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
             price = Convert.ToDouble(dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString());
-
             lblPrice.Text = price.ToString();
             label3.Text = name;
             lblType.Text = type;
@@ -89,10 +90,10 @@ namespace Mobilize
             string email = lblEmail.Text;
             if (id_transport <= 0)
             {
-                MessageBox.Show("Please select transport before rent");
+                MessageBox.Show(@"Emai must be followed the format");
             }else if (txtTime.Text.Trim().Length == 0)
             {
-                MessageBox.Show("Please enter hour you rent the transport");
+                MessageBox.Show(@"Emai must be followed the format");
             }
             else
             {
@@ -104,15 +105,15 @@ namespace Mobilize
                         dm.ConnectDb();
                         int success = dm.InsertData("[Order]", 
                             new string[] {"user_email", "transport_id", "rent_hour", "subtotal"}, 
-                            new object[] {email, id_transport, Convert.ToDouble(txtTime.Text.Trim()), Convert.ToDouble(lblToTal.Text)});
+                            new object[] {emails, id_transport, Convert.ToDouble(txtTime.Text.Trim()), Convert.ToDouble(lblToTal.Text)});
                         if (success > 0)
                         {
-                            MessageBox.Show("Order successful!\nPleases wait for our contacts");
+                            MessageBox.Show(@"Emai must be followed the format");
                             Environment.Exit(0);
                         }
                         else
                         {
-                            MessageBox.Show("Error");
+                            MessageBox.Show(@"Emai must be followed the format");
                         }
                         if (dm.connection.State == ConnectionState.Open)
                         {
@@ -120,6 +121,27 @@ namespace Mobilize
                         }
                         break;
                 }
+            }
+        }
+
+        private void txtTime_TextChanged(object sender, EventArgs e)
+        {
+            if (id_transport > 0)
+            {
+                double total;
+                if (!Double.TryParse(txtTime.Text.Trim(), out total))
+                {
+                    MessageBox.Show(@"Emai must be followed the format");
+                }
+                else
+                {
+                    total = Convert.ToDouble(txtTime.Text.Trim()) * Convert.ToDouble(lblPrice.Text);
+                    lblToTal.Text = total.ToString();
+                }
+            }
+            else
+            {
+                MessageBox.Show(@"Emai must be followed the format");
             }
         }
     }

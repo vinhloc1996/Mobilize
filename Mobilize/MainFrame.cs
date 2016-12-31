@@ -12,12 +12,22 @@ namespace Mobilize
         private Dm dm;
         SqlDataAdapter adapt;
         private int id = 0;
-        public mainFrame()
+        public mainFrame(string role)
         {
             InitializeComponent();
             dm = new Dm();
             DisplayData();
             InitCbb();
+            if (role.Equals("Staff"))
+            {
+                // ẩn tab add users
+                // ẩn chức năng xuất báo cáo
+            }
+            else
+            {
+                // hiện tab add users
+                //hiện chức năng xuất báo cáo
+            }
         }
         
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -41,7 +51,7 @@ namespace Mobilize
             }
             catch (Exception exp)
             {
-                
+                Environment.Exit(0);
             }
         }
 
@@ -49,7 +59,7 @@ namespace Mobilize
         {
             dm.ConnectDb();
             DataTable dataTable = new DataTable();
-            adapt = new SqlDataAdapter("SELECT * FROM [Order]", dm.connection);
+            adapt = new SqlDataAdapter("SELECT * FROM [Orders]", dm.connection);
             adapt.Fill(dataTable);
             gridOrder.DataSource = dataTable;
             gridOrder.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -65,7 +75,7 @@ namespace Mobilize
             dm.ConnectDb();
             DataTable dataTable = new DataTable();
 
-            adapt = new SqlDataAdapter("SELECT * FROM Transports", dm.connection);
+            adapt = new SqlDataAdapter("SELECT * FROM Vehicles", dm.connection);
             adapt.Fill(dataTable);
             gridTransports.DataSource = dataTable;
             gridTransports.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -79,7 +89,7 @@ namespace Mobilize
         {
             dm.ConnectDb();
             DataTable dataTable = new DataTable();
-            adapt = new SqlDataAdapter("SELECT email, fullname, phone FROM [Users]", dm.connection);
+            adapt = new SqlDataAdapter("SELECT email, fullname, phone, role FROM [Users]", dm.connection);
             adapt.Fill(dataTable);
             gridUser.DataSource = dataTable;
             gridUser.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -140,39 +150,39 @@ namespace Mobilize
             double test;
             if (addon.Length == 0 || addon.Length > 255)
             {
-                MessageBox.Show("Add-on cannot be left blank and its length must smaller than 255 characters!");
+                MessageBox.Show(@"Emai must be followed the format");
             }
             else if (year.Length != 4 || !Regex.IsMatch(year, @"^\d+$"))
             {
-                MessageBox.Show("Year must be contained 4 numbers");
+                MessageBox.Show(@"Emai must be followed the format");
             }else if (!Double.TryParse(price, out test))
             {
-                MessageBox.Show("Price must be in double type");
+                MessageBox.Show(@"Emai must be followed the format");
             }else if (name.Length > 255 || name.Length == 0)
             {
-                MessageBox.Show("Name cannot be left blank and its length must smaller than 255 characters!");
+                MessageBox.Show(@"Emai must be followed the format");
             }else if (manu.Length > 100 || manu.Length == 0)
             {
-                MessageBox.Show("Manufactures cannot be left blank and its length must smaller than 100 characters!");
+                MessageBox.Show(@"Emai must be followed the format");
             }else if (model.Length > 100 || model.Length == 0)
             {
-                MessageBox.Show("Model cannot be left blank and its length must smaller than 100 characters!");
+                MessageBox.Show(@"Emai must be followed the format");
             }
             else
             {
                 dm.ConnectDb();
-                int success = dm.InsertData("Transports",
+                int success = dm.InsertData("Vehicles",
                     new string[] { "name", "manufacturers", "model", "registration_year", "add_on", "price_hour", "type" },
                     new object[] { name, manu, model, year, addon, price, type });
                 if (success > 0)
                 {
-                    MessageBox.Show("Insert Successful");
+                    MessageBox.Show(@"Emai must be followed the format");
                     DisplayData();
                     ClearData();
                 }
                 else
                 {
-                    MessageBox.Show("Insert Failed");
+                    MessageBox.Show(@"Emai must be followed the format");
                 }
                 if (dm.connection.State == ConnectionState.Open)
                 {
@@ -189,7 +199,7 @@ namespace Mobilize
             DataTable dataTable = new DataTable();
             string name = txtName.Text.Trim();
             string type = (string)cbbTypes.SelectedItem;
-            adapt = new SqlDataAdapter("SELECT * FROM Transports WHERE name LIKE '%"+name+"%' AND type='"+type+"'", dm.connection);
+            adapt = new SqlDataAdapter("SELECT * FROM Vehicles WHERE name LIKE '%"+name+"%' AND type='"+type+"'", dm.connection);
             adapt.Fill(dataTable);
             gridTransports.DataSource = dataTable;
             if (dm.connection.State == ConnectionState.Open)
