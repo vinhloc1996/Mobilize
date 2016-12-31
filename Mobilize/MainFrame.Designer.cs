@@ -277,9 +277,9 @@
             this.label7.ForeColor = System.Drawing.Color.Red;
             this.label7.Location = new System.Drawing.Point(318, 25);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(298, 29);
+            this.label7.Size = new System.Drawing.Size(272, 29);
             this.label7.TabIndex = 1;
-            this.label7.Text = "Transport Rent Activities";
+            this.label7.Text = "Vehicle Rent Activities";
             // 
             // gridOrder
             // 
