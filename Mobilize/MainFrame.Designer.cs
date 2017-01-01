@@ -49,6 +49,9 @@
             this.txtName = new System.Windows.Forms.TextBox();
             this.name = new System.Windows.Forms.Label();
             this.tabOrder = new System.Windows.Forms.TabPage();
+            this.cbbMonthYear = new System.Windows.Forms.ComboBox();
+            this.lblMonthYear = new System.Windows.Forms.Label();
+            this.btnExport = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.gridOrder = new System.Windows.Forms.DataGridView();
             this.tabUser = new System.Windows.Forms.TabPage();
@@ -66,10 +69,9 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.gridUser = new System.Windows.Forms.DataGridView();
-            this.btnExport = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.lblMonthYear = new System.Windows.Forms.Label();
-            this.cbbMonthYear = new System.Windows.Forms.ComboBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.txtFilter = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabTransport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridVehicle)).BeginInit();
@@ -277,6 +279,8 @@
             // 
             // tabOrder
             // 
+            this.tabOrder.Controls.Add(this.txtFilter);
+            this.tabOrder.Controls.Add(this.label14);
             this.tabOrder.Controls.Add(this.cbbMonthYear);
             this.tabOrder.Controls.Add(this.lblMonthYear);
             this.tabOrder.Controls.Add(this.btnExport);
@@ -289,6 +293,33 @@
             this.tabOrder.TabIndex = 1;
             this.tabOrder.Text = "Order";
             this.tabOrder.UseVisualStyleBackColor = true;
+            // 
+            // cbbMonthYear
+            // 
+            this.cbbMonthYear.FormattingEnabled = true;
+            this.cbbMonthYear.Location = new System.Drawing.Point(470, 337);
+            this.cbbMonthYear.Name = "cbbMonthYear";
+            this.cbbMonthYear.Size = new System.Drawing.Size(121, 21);
+            this.cbbMonthYear.TabIndex = 4;
+            // 
+            // lblMonthYear
+            // 
+            this.lblMonthYear.AutoSize = true;
+            this.lblMonthYear.Location = new System.Drawing.Point(378, 340);
+            this.lblMonthYear.Name = "lblMonthYear";
+            this.lblMonthYear.Size = new System.Drawing.Size(64, 13);
+            this.lblMonthYear.TabIndex = 3;
+            this.lblMonthYear.Text = "Month/Year";
+            // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(630, 331);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(92, 31);
+            this.btnExport.TabIndex = 2;
+            this.btnExport.Text = "Export Report";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // label7
             // 
@@ -306,10 +337,10 @@
             this.gridOrder.AllowUserToAddRows = false;
             this.gridOrder.AllowUserToDeleteRows = false;
             this.gridOrder.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridOrder.Location = new System.Drawing.Point(7, 74);
+            this.gridOrder.Location = new System.Drawing.Point(6, 96);
             this.gridOrder.Name = "gridOrder";
             this.gridOrder.ReadOnly = true;
-            this.gridOrder.Size = new System.Drawing.Size(861, 215);
+            this.gridOrder.Size = new System.Drawing.Size(862, 215);
             this.gridOrder.TabIndex = 0;
             // 
             // tabUser
@@ -462,34 +493,24 @@
             this.gridUser.TabIndex = 0;
             this.gridUser.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridUser_RowHeaderMouseClick);
             // 
-            // btnExport
+            // label14
             // 
-            this.btnExport.Location = new System.Drawing.Point(630, 331);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(92, 31);
-            this.btnExport.TabIndex = 2;
-            this.btnExport.Text = "Export Report";
-            this.btnExport.UseVisualStyleBackColor = true;
-            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(36, 62);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(107, 13);
+            this.label14.TabIndex = 5;
+            this.label14.Text = "Filter Customer Name";
             // 
-            // lblMonthYear
+            // txtFilter
             // 
-            this.lblMonthYear.AutoSize = true;
-            this.lblMonthYear.Location = new System.Drawing.Point(378, 340);
-            this.lblMonthYear.Name = "lblMonthYear";
-            this.lblMonthYear.Size = new System.Drawing.Size(64, 13);
-            this.lblMonthYear.TabIndex = 3;
-            this.lblMonthYear.Text = "Month/Year";
+            this.txtFilter.Location = new System.Drawing.Point(149, 59);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(167, 20);
+            this.txtFilter.TabIndex = 6;
+            this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
-            // cbbMonthYear
-            // 
-            this.cbbMonthYear.FormattingEnabled = true;
-            this.cbbMonthYear.Location = new System.Drawing.Point(470, 337);
-            this.cbbMonthYear.Name = "cbbMonthYear";
-            this.cbbMonthYear.Size = new System.Drawing.Size(121, 21);
-            this.cbbMonthYear.TabIndex = 4;
-            // 
-            // mainFrame
+            // MainFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -555,5 +576,7 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ComboBox cbbMonthYear;
         private System.Windows.Forms.Label lblMonthYear;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox txtFilter;
     }
 }

@@ -46,8 +46,6 @@ namespace Mobilize
             }
         }
 
-//(dataGridView1.DataSource as DataTable).DefaultView.RowFilter = string.Format("name like '%{0}%'", txtFilter.Text.Trim());
-
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             try

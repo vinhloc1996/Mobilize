@@ -433,5 +433,10 @@ namespace Mobilize
             Process p = new Process {StartInfo = new ProcessStartInfo(targetFilename)};
             p.Start();
         }
+
+        private void txtFilter_TextChanged(object sender, EventArgs e)
+        {
+            ((DataTable) gridOrder.DataSource).DefaultView.RowFilter = $"cus_name like '%{txtFilter.Text.Trim()}%'";
+        }
     }
 }
