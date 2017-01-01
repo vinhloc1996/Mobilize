@@ -32,6 +32,7 @@ namespace Mobilize
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+
             Environment.Exit(0);
         }
 
