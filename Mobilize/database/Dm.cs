@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Mobilize.database
 {
     public class Dm
     {
-        public SqlConnection connection;
+        public SqlConnection Connection;
 
 
         public void ConnectDb()
@@ -16,25 +17,20 @@ namespace Mobilize.database
                 "word=123456";
             try
             {
-                connection = new SqlConnection(connectionString);
-                connection.Open();
+                Connection = new SqlConnection(connectionString);
+                Connection.Open();
             }
             catch (SqlException sql)
             {
-                MessageBox.Show(@"Error at open connection to database");
-                connection.Close();
+                MessageBox.Show(@"Error at open connection to database " + sql.Message);
+                Connection.Close();
                 Environment.Exit(0);
             }
         }
 
-        public Dm()
-        {
-//            connectDB();
-        }
-
         public SqlDataReader SelectData(string query)
         {
-            SqlCommand cmd = new SqlCommand(query, connection);
+            SqlCommand cmd = new SqlCommand(query, Connection);
             SqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
@@ -60,17 +56,17 @@ namespace Mobilize.database
                         query += "@" + parameters[i] + ", ";
                     }
                 }
-                SqlCommand cmd = new SqlCommand(query, connection);
+                SqlCommand cmd = new SqlCommand(query, Connection);
                 for (int j = 0; j < parameters.Length; j++)
                 {
-                   cmd.Parameters.AddWithValue("@" + parameters[j], values[j]);
+                    cmd.Parameters.AddWithValue("@" + parameters[j], values[j]);
                 }
                 row = cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(@"Error at insert function in Dm " + ex.Message);
-                connection.Close();
+                Connection.Close();
             }
             return row;
         }
@@ -94,9 +90,9 @@ namespace Mobilize.database
                     else
                     {
                         query += parameters[i] + "=@" + parameters[i] + ", ";
-                    }    
+                    }
                 }
-                SqlCommand cmd = new SqlCommand(query, connection);
+                SqlCommand cmd = new SqlCommand(query, Connection);
                 for (int j = 0; j < parameters.Length; j++)
                 {
                     cmd.Parameters.AddWithValue("@" + parameters[j], values[j]);
@@ -107,7 +103,7 @@ namespace Mobilize.database
             catch (Exception ex)
             {
                 MessageBox.Show(@"Error at update function in Dm " + ex.Message);
-                connection.Close();
+                Connection.Close();
             }
             return row;
         }
@@ -118,11 +114,8 @@ namespace Mobilize.database
             try
             {
                 string query = "DELETE FROM " + table + "WHERE ";
-                for (int i = 0; i < parameters.Length; i++)
-                {
-                    query += parameters[i] + "=@" + parameters[i];
-                }
-                SqlCommand cmd = new SqlCommand(query, connection);
+                query = parameters.Aggregate(query, (current, t) => current + (t + "=@" + t));
+                SqlCommand cmd = new SqlCommand(query, Connection);
                 for (int j = 0; j < parameters.Length; j++)
                 {
                     cmd.Parameters.AddWithValue("@" + parameters[j], values[j]);
@@ -132,7 +125,7 @@ namespace Mobilize.database
             catch (Exception ex)
             {
                 MessageBox.Show(@"Error at delete function in Dm " + ex.Message);
-                connection.Close();
+                Connection.Close();
             }
             return row;
         }

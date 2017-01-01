@@ -1,6 +1,6 @@
 ﻿namespace Mobilize
 {
-    partial class mainFrame
+    partial class MainFrame
     {
         /// <summary>
         /// Required designer variable.
@@ -52,8 +52,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.gridOrder = new System.Windows.Forms.DataGridView();
             this.tabUser = new System.Windows.Forms.TabPage();
-            this.label8 = new System.Windows.Forms.Label();
-            this.gridUser = new System.Windows.Forms.DataGridView();
             this.btnResetPass = new System.Windows.Forms.Button();
             this.cbbRole = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -66,6 +64,12 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.gridUser = new System.Windows.Forms.DataGridView();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.lblMonthYear = new System.Windows.Forms.Label();
+            this.cbbMonthYear = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabTransport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridVehicle)).BeginInit();
@@ -273,6 +277,9 @@
             // 
             // tabOrder
             // 
+            this.tabOrder.Controls.Add(this.cbbMonthYear);
+            this.tabOrder.Controls.Add(this.lblMonthYear);
+            this.tabOrder.Controls.Add(this.btnExport);
             this.tabOrder.Controls.Add(this.label7);
             this.tabOrder.Controls.Add(this.gridOrder);
             this.tabOrder.Location = new System.Drawing.Point(4, 22);
@@ -299,10 +306,10 @@
             this.gridOrder.AllowUserToAddRows = false;
             this.gridOrder.AllowUserToDeleteRows = false;
             this.gridOrder.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridOrder.Location = new System.Drawing.Point(7, 248);
+            this.gridOrder.Location = new System.Drawing.Point(7, 74);
             this.gridOrder.Name = "gridOrder";
             this.gridOrder.ReadOnly = true;
-            this.gridOrder.Size = new System.Drawing.Size(861, 138);
+            this.gridOrder.Size = new System.Drawing.Size(861, 215);
             this.gridOrder.TabIndex = 0;
             // 
             // tabUser
@@ -328,29 +335,6 @@
             this.tabUser.TabIndex = 2;
             this.tabUser.Text = "User";
             this.tabUser.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.ForeColor = System.Drawing.Color.Blue;
-            this.label8.Location = new System.Drawing.Point(351, 25);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(205, 29);
-            this.label8.TabIndex = 2;
-            this.label8.Text = "User Information";
-            // 
-            // gridUser
-            // 
-            this.gridUser.AllowUserToAddRows = false;
-            this.gridUser.AllowUserToDeleteRows = false;
-            this.gridUser.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridUser.Location = new System.Drawing.Point(6, 227);
-            this.gridUser.Name = "gridUser";
-            this.gridUser.ReadOnly = true;
-            this.gridUser.Size = new System.Drawing.Size(862, 159);
-            this.gridUser.TabIndex = 0;
-            this.gridUser.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridUser_RowHeaderMouseClick);
             // 
             // btnResetPass
             // 
@@ -455,13 +439,63 @@
             this.label12.TabIndex = 12;
             this.label12.Text = "Email";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.Blue;
+            this.label8.Location = new System.Drawing.Point(351, 25);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(205, 29);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "User Information";
+            // 
+            // gridUser
+            // 
+            this.gridUser.AllowUserToAddRows = false;
+            this.gridUser.AllowUserToDeleteRows = false;
+            this.gridUser.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridUser.Location = new System.Drawing.Point(6, 227);
+            this.gridUser.Name = "gridUser";
+            this.gridUser.ReadOnly = true;
+            this.gridUser.Size = new System.Drawing.Size(862, 159);
+            this.gridUser.TabIndex = 0;
+            this.gridUser.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridUser_RowHeaderMouseClick);
+            // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(630, 331);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(92, 31);
+            this.btnExport.TabIndex = 2;
+            this.btnExport.Text = "Export Report";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // lblMonthYear
+            // 
+            this.lblMonthYear.AutoSize = true;
+            this.lblMonthYear.Location = new System.Drawing.Point(378, 340);
+            this.lblMonthYear.Name = "lblMonthYear";
+            this.lblMonthYear.Size = new System.Drawing.Size(64, 13);
+            this.lblMonthYear.TabIndex = 3;
+            this.lblMonthYear.Text = "Month/Year";
+            // 
+            // cbbMonthYear
+            // 
+            this.cbbMonthYear.FormattingEnabled = true;
+            this.cbbMonthYear.Location = new System.Drawing.Point(470, 337);
+            this.cbbMonthYear.Name = "cbbMonthYear";
+            this.cbbMonthYear.Size = new System.Drawing.Size(121, 21);
+            this.cbbMonthYear.TabIndex = 4;
+            // 
             // mainFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(906, 442);
             this.Controls.Add(this.tabControl1);
-            this.Name = "mainFrame";
+            this.Name = "MainFrame";
             this.Text = "Mobilize";
             this.tabControl1.ResumeLayout(false);
             this.tabTransport.ResumeLayout(false);
@@ -517,5 +551,9 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ComboBox cbbMonthYear;
+        private System.Windows.Forms.Label lblMonthYear;
     }
 }

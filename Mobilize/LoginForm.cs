@@ -9,8 +9,8 @@ namespace Mobilize
 {
     public partial class LoginForm : Form
     {
-        private Dm _dm;
-        private mainFrame _main;
+        private readonly Dm _dm;
+        private MainFrame _main;
 
         public LoginForm()
         {
@@ -52,7 +52,7 @@ namespace Mobilize
                 {
                     if (password.Equals(reader.GetString(1)))
                     {
-                        _main = new mainFrame(email, reader.GetString(4));
+                        _main = new MainFrame(email, reader.GetString(4));
                         _main.Show();
                         Hide();
                     }
@@ -66,9 +66,9 @@ namespace Mobilize
                     MessageBox.Show(@"Invalid Email");
                 }
             }
-            if (_dm.connection.State == ConnectionState.Open)
+            if (_dm.Connection.State == ConnectionState.Open)
             {
-                _dm.connection.Close();
+                _dm.Connection.Close();
             }
         }
 
@@ -82,9 +82,9 @@ namespace Mobilize
             {
                 isExisted = true;
             }
-            if (_dm.connection.State == ConnectionState.Open)
+            if (_dm.Connection.State == ConnectionState.Open)
             {
-                _dm.connection.Close();
+                _dm.Connection.Close();
             }
             return isExisted;
         }

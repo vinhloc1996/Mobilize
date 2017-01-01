@@ -1,26 +1,28 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using ExportToExcel;
 using Mobilize.database;
 
 namespace Mobilize
 {
-    public partial class mainFrame : Form
+    public partial class MainFrame : Form
     {
-        private Dm _dm;
-        private LoginForm _login;
-        SqlDataAdapter adapt;
-        private int id = 0;
-        private string cur_email = ""; 
-        private string email_user = "";
+        private readonly Dm _dm;
+        private readonly LoginForm _login;
+        SqlDataAdapter _adapt;
+        private int _id;
+        private readonly string _curEmail;
+        private string _emailUser = "";
 
-        public mainFrame(string email, string role)
+        public MainFrame(string email, string role)
         {
             InitializeComponent();
-            Text = @"Mobilize - " + email + " (" + role + ")";
-            cur_email = email;
+            Text = @"Mobilize - " + email + @" (" + role + @")";
+            _curEmail = email;
             _dm = new Dm();
             _login = new LoginForm();
             DisplayData();
@@ -29,7 +31,20 @@ namespace Mobilize
             if (role.Equals("Staff"))
             {
                 tabControl1.TabPages.Remove(tabUser);
+                lblMonthYear.Visible = false;
+                cbbMonthYear.Visible = false;
+                btnExport.Visible = false;
             }
+            else
+            {
+                InitYearMonthCombobox();
+            }
+        }
+
+        public sealed override string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -41,19 +56,20 @@ namespace Mobilize
                 if (e.CloseReason == CloseReason.WindowsShutDown) return;
 
                 // Confirm user wants to close
-                switch (MessageBox.Show(this, "Are you sure you want to close?", "Closing", MessageBoxButtons.YesNo))
+                switch (MessageBox.Show(this, @"Are you sure you want to close?", @"Closing", MessageBoxButtons.YesNo))
                 {
                     case DialogResult.No:
                         e.Cancel = true;
                         break;
                     case DialogResult.Yes:
+                        Dispose();
                         Environment.Exit(0);
                         break;
                 }
             }
             catch (Exception exp)
             {
-                Environment.Exit(0);
+                MessageBox.Show(@"Error when closing windows " + exp.Message);
             }
         }
 
@@ -61,13 +77,13 @@ namespace Mobilize
         {
             _dm.ConnectDb();
             DataTable dataTable = new DataTable();
-            adapt = new SqlDataAdapter("SELECT * FROM [Orders]", _dm.connection);
-            adapt.Fill(dataTable);
+            _adapt = new SqlDataAdapter("SELECT * FROM [Orders]", _dm.Connection);
+            _adapt.Fill(dataTable);
             gridOrder.DataSource = dataTable;
-            gridOrder.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            if (_dm.connection.State == ConnectionState.Open)
+            gridOrder.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            if (_dm.Connection.State == ConnectionState.Open)
             {
-                _dm.connection.Close();
+                _dm.Connection.Close();
             }
         }
 
@@ -76,13 +92,13 @@ namespace Mobilize
             _dm.ConnectDb();
             DataTable dataTable = new DataTable();
 
-            adapt = new SqlDataAdapter("SELECT * FROM Vehicles", _dm.connection);
-            adapt.Fill(dataTable);
+            _adapt = new SqlDataAdapter("SELECT * FROM Vehicles", _dm.Connection);
+            _adapt.Fill(dataTable);
             gridVehicle.DataSource = dataTable;
-            gridVehicle.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            if (_dm.connection.State == ConnectionState.Open)
+            gridVehicle.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            if (_dm.Connection.State == ConnectionState.Open)
             {
-                _dm.connection.Close();
+                _dm.Connection.Close();
             }
         }
 
@@ -90,14 +106,14 @@ namespace Mobilize
         {
             _dm.ConnectDb();
             DataTable dataTable = new DataTable();
-            adapt = new SqlDataAdapter("SELECT * FROM [Users]", _dm.connection);
-            adapt.Fill(dataTable);
+            _adapt = new SqlDataAdapter("SELECT * FROM [Users]", _dm.Connection);
+            _adapt.Fill(dataTable);
             gridUser.DataSource = dataTable;
             gridUser.Columns[1].Visible = false;
-            gridUser.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            if (_dm.connection.State == ConnectionState.Open)
+            gridUser.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            if (_dm.Connection.State == ConnectionState.Open)
             {
-                _dm.connection.Close();
+                _dm.Connection.Close();
             }
         }
 
@@ -126,7 +142,7 @@ namespace Mobilize
 
         public void ClearData()
         {
-            id = 0;
+            _id = 0;
             txtName.Text = "";
             txtAddOn.Text = "";
             txtManu.Text = "";
@@ -138,26 +154,19 @@ namespace Mobilize
 
         private void gridTransports_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            id = Convert.ToInt32(gridVehicle.Rows[e.RowIndex].Cells[0].Value.ToString());
+            _id = Convert.ToInt32(gridVehicle.Rows[e.RowIndex].Cells[0].Value.ToString());
             txtName.Text = gridVehicle.Rows[e.RowIndex].Cells[1].Value.ToString();
             txtManu.Text = gridVehicle.Rows[e.RowIndex].Cells[2].Value.ToString();
             txtModel.Text = gridVehicle.Rows[e.RowIndex].Cells[3].Value.ToString();
             txtRegis_Year.Text = gridVehicle.Rows[e.RowIndex].Cells[4].Value.ToString();
             txtAddOn.Text = gridVehicle.Rows[e.RowIndex].Cells[5].Value.ToString();
             txtPrice.Text = gridVehicle.Rows[e.RowIndex].Cells[6].Value.ToString();
-            if (gridVehicle.Rows[e.RowIndex].Cells[7].Value.ToString().Equals("Bike"))
-            {
-                cbbTypes.SelectedIndex = 1;
-            }
-            else
-            {
-                cbbTypes.SelectedIndex = 0;
-            }
+            cbbTypes.SelectedIndex = gridVehicle.Rows[e.RowIndex].Cells[7].Value.ToString().Equals("Bike") ? 1 : 0;
         }
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
-            string name = txtName.Text.Trim();
+            string nameVehicle = txtName.Text.Trim();
             string manu = txtManu.Text.Trim();
             string model = txtModel.Text.Trim();
             string year = txtRegis_Year.Text.Trim();
@@ -165,7 +174,7 @@ namespace Mobilize
             string price = txtPrice.Text.Trim();
             string type = (string) cbbTypes.SelectedItem;
             double test;
-            if (name.Length > 255 || name.Length == 0)
+            if (nameVehicle.Length > 255 || nameVehicle.Length == 0)
             {
                 MessageBox.Show(@"Name cannot be left blank or over 255 characters");
             }
@@ -193,8 +202,8 @@ namespace Mobilize
             {
                 _dm.ConnectDb();
                 int success = _dm.InsertData("Vehicles",
-                    new string[] {"name", "manufacturers", "model", "registration_year", "add_on", "price_hour", "type"},
-                    new object[] {name, manu, model, year, addon, price, type});
+                    new[] {"name", "manufacturers", "model", "registration_year", "add_on", "price_hour", "type"},
+                    new object[] {nameVehicle, manu, model, year, addon, price, type});
                 if (success > 0)
                 {
                     MessageBox.Show(@"Add new vehicle successful");
@@ -205,9 +214,9 @@ namespace Mobilize
                 {
                     MessageBox.Show(@"Failure when adding! Please contact with technical");
                 }
-                if (_dm.connection.State == ConnectionState.Open)
+                if (_dm.Connection.State == ConnectionState.Open)
                 {
-                    _dm.connection.Close();
+                    _dm.Connection.Close();
                 }
             }
         }
@@ -215,18 +224,18 @@ namespace Mobilize
         private void btnSearch_Click(object sender, EventArgs e)
         {
             _dm.ConnectDb();
-            adapt = null;
+            _adapt = null;
             gridVehicle.DataSource = null;
             DataTable dataTable = new DataTable();
-            string name = txtName.Text.Trim();
+            string nameVehicle = txtName.Text.Trim();
             string type = (string) cbbTypes.SelectedItem;
-            adapt = new SqlDataAdapter(
-                "SELECT * FROM Vehicles WHERE name LIKE '%" + name + "%' AND type='" + type + "'", _dm.connection);
-            adapt.Fill(dataTable);
+            _adapt = new SqlDataAdapter(
+                "SELECT * FROM Vehicles WHERE name LIKE '%" + nameVehicle + "%' AND type='" + type + "'", _dm.Connection);
+            _adapt.Fill(dataTable);
             gridVehicle.DataSource = dataTable;
-            if (_dm.connection.State == ConnectionState.Open)
+            if (_dm.Connection.State == ConnectionState.Open)
             {
-                _dm.connection.Close();
+                _dm.Connection.Close();
             }
         }
 
@@ -246,7 +255,6 @@ namespace Mobilize
             else if (tabControl1.SelectedIndex == 1)
             {
                 DisplayOrder();
-                
             }
             else
             {
@@ -295,7 +303,7 @@ namespace Mobilize
             {
                 _dm.ConnectDb();
                 int success = _dm.InsertData("[Users]",
-                    new string[] {"email", "password", "fullname", "phone", "role"},
+                    new[] {"email", "password", "fullname", "phone", "role"},
                     new object[] {regEmail, regPassword, fullname, phone, role});
                 if (success > 0)
                 {
@@ -307,55 +315,123 @@ namespace Mobilize
                 {
                     MessageBox.Show(@"Failure when adding! Please contact with technical");
                 }
-                if (_dm.connection.State == ConnectionState.Open)
+                if (_dm.Connection.State == ConnectionState.Open)
                 {
-                    _dm.connection.Close();
+                    _dm.Connection.Close();
                 }
             }
         }
 
         private void gridVehicle_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            MessageBox.Show("Testing id vehicle is " + id);
+            RentVehicle rent = new RentVehicle(_curEmail, _id);
+            rent.ShowDialog();
         }
 
         private void gridUser_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            email_user = gridUser.Rows[e.RowIndex].Cells[0].Value.ToString();
+            _emailUser = gridUser.Rows[e.RowIndex].Cells[0].Value.ToString();
         }
 
         private void btnResetPass_Click(object sender, EventArgs e)
         {
-            if (email_user.Length == 0)
+            if (_emailUser.Length == 0)
             {
                 MessageBox.Show(@"Please choose user before reset password");
             }
             else
             {
                 switch (MessageBox.Show(this,
-                    "Are you sure you want to reset password of " + email_user + "?", "Closing", MessageBoxButtons.YesNo)
+                    @"Are you sure you want to reset password of " + _emailUser + @"?", @"Closing",
+                    MessageBoxButtons.YesNo)
                 )
                 {
                     case DialogResult.Yes:
                         _dm.ConnectDb();
                         int success = _dm.UpdateData("[Users]",
-                            new string[] {"password", "email"},
-                            new object[] {123456, email_user });
+                            new[] {"password", "email"},
+                            new object[] {123456, _emailUser});
                         if (success > 0)
                         {
-                            MessageBox.Show(@"Reset password for " + email_user + @" successful");
+                            MessageBox.Show(@"Reset password for " + _emailUser + @" successful");
                         }
                         else
                         {
                             MessageBox.Show(@"Reset password fail");
                         }
-                        if (_dm.connection.State == ConnectionState.Open)
+                        if (_dm.Connection.State == ConnectionState.Open)
                         {
-                            _dm.connection.Close();
+                            _dm.Connection.Close();
                         }
                         break;
                 }
             }
+        }
+
+        public void InitYearMonthCombobox()
+        {
+            _dm.ConnectDb();
+            string query = "SELECT DISTINCT MONTH(create_date), YEAR(create_date) FROM [Orders]";
+            SqlDataReader reader = _dm.SelectData(query);
+            if (reader != null)
+            {
+                cbbMonthYear.Items.Add(reader.GetInt32(0) + "/" + reader.GetInt32(1));
+                while (reader.Read())
+                {
+                    cbbMonthYear.Items.Add(reader.GetInt32(0) + "/" + reader.GetInt32(1));
+                }
+            }
+            cbbMonthYear.SelectedIndex = 0;
+            cbbMonthYear.DropDownStyle = ComboBoxStyle.DropDownList;
+            if (_dm.Connection.State == ConnectionState.Open)
+            {
+                _dm.Connection.Close();
+            }
+        }
+
+        public DataSet GetDataOrders(string[] monthYear)
+        {
+            _dm.ConnectDb();
+            DataTable dataTable = new DataTable(monthYear[0] + "-" + monthYear[1]);
+            _adapt =
+                new SqlDataAdapter(
+                    "SELECT * FROM [Orders] WHERE create_date BETWEEN '" + monthYear[1] + "-" + monthYear[0] + "-" + 1 +
+                    "' " +
+                    "AND '" + monthYear[1] + "-" + monthYear[0] + "-" + 31 + "'", _dm.Connection);
+            _adapt.Fill(dataTable);
+            DataSet ds = new DataSet();
+            ds.Tables.Add(dataTable);
+            if (_dm.Connection.State == ConnectionState.Open)
+            {
+                _dm.Connection.Close();
+            }
+            return ds;
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            string monthYear = (string) cbbMonthYear.SelectedItem;
+            string[] abc = monthYear.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            saveFileDialog1.FileName = "Report Orders " + abc[0] + "-" + abc[1] + ".xlsx";
+            saveFileDialog1.Filter = @"Excel 2007 files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 1;
+            saveFileDialog1.RestoreDirectory = true;
+            saveFileDialog1.OverwritePrompt = false;
+            if (saveFileDialog1.ShowDialog() != DialogResult.OK)
+                return;
+            string targetFilename = saveFileDialog1.FileName;
+            DataSet ds = GetDataOrders(abc);
+            try
+            {
+                CreateExcelFile.CreateExcelDocument(ds, targetFilename);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(@"Couldn't create Excel file.\r\nException: " + ex.Message);
+                return;
+            }
+            Process p = new Process {StartInfo = new ProcessStartInfo(targetFilename)};
+            p.Start();
         }
     }
 }
