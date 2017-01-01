@@ -12,6 +12,7 @@ namespace Mobilize.database
 
         public void ConnectDb()
         {
+            //Test
             string connectionString =
                 "Data Source=.;Initial Catalog=Mobilize;Persist Security Info=True;User ID=sa;Pass" +
                 "word=123456";
