@@ -9,27 +9,29 @@ namespace Mobilize
 {
     public partial class mainFrame : Form
     {
-        private Dm dm;
+        private Dm _dm;
+        private LoginForm _login;
         SqlDataAdapter adapt;
         private int id = 0;
-        public mainFrame(string role)
+        private string cur_email = ""; 
+        private string email_user = "";
+
+        public mainFrame(string email, string role)
         {
             InitializeComponent();
-            dm = new Dm();
+            Text = @"Mobilize - " + email + " (" + role + ")";
+            cur_email = email;
+            _dm = new Dm();
+            _login = new LoginForm();
             DisplayData();
+            AcceptButton = btnInsert;
             InitCbb();
             if (role.Equals("Staff"))
             {
-                // ẩn tab add users
-                // ẩn chức năng xuất báo cáo
-            }
-            else
-            {
-                // hiện tab add users
-                //hiện chức năng xuất báo cáo
+                tabControl1.TabPages.Remove(tabUser);
             }
         }
-        
+
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             try
@@ -57,54 +59,69 @@ namespace Mobilize
 
         public void DisplayOrder()
         {
-            dm.ConnectDb();
+            _dm.ConnectDb();
             DataTable dataTable = new DataTable();
-            adapt = new SqlDataAdapter("SELECT * FROM [Orders]", dm.connection);
+            adapt = new SqlDataAdapter("SELECT * FROM [Orders]", _dm.connection);
             adapt.Fill(dataTable);
             gridOrder.DataSource = dataTable;
             gridOrder.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            if (dm.connection.State == ConnectionState.Open)
+            if (_dm.connection.State == ConnectionState.Open)
             {
-                dm.connection.Close();
+                _dm.connection.Close();
             }
-            
         }
 
         public void DisplayData()
         {
-            dm.ConnectDb();
+            _dm.ConnectDb();
             DataTable dataTable = new DataTable();
 
-            adapt = new SqlDataAdapter("SELECT * FROM Vehicles", dm.connection);
+            adapt = new SqlDataAdapter("SELECT * FROM Vehicles", _dm.connection);
             adapt.Fill(dataTable);
-            gridTransports.DataSource = dataTable;
-            gridTransports.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            if (dm.connection.State == ConnectionState.Open)
+            gridVehicle.DataSource = dataTable;
+            gridVehicle.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            if (_dm.connection.State == ConnectionState.Open)
             {
-                dm.connection.Close();
+                _dm.connection.Close();
             }
         }
 
         public void DisplayUser()
         {
-            dm.ConnectDb();
+            _dm.ConnectDb();
             DataTable dataTable = new DataTable();
-            adapt = new SqlDataAdapter("SELECT email, fullname, phone, role FROM [Users]", dm.connection);
+            adapt = new SqlDataAdapter("SELECT * FROM [Users]", _dm.connection);
             adapt.Fill(dataTable);
             gridUser.DataSource = dataTable;
+            gridUser.Columns[1].Visible = false;
             gridUser.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            if (dm.connection.State == ConnectionState.Open)
+            if (_dm.connection.State == ConnectionState.Open)
             {
-                dm.connection.Close();
+                _dm.connection.Close();
             }
+        }
+
+        public void ClearDataUser()
+        {
+            txtRegEmail.Text = "";
+            txtRegPassword.Text = "";
+            txtFullNam.Text = "";
+            txtPhone.Text = "";
+            cbbRole.SelectedIndex = 0;
         }
 
         public void InitCbb()
         {
+            //Cbb type vehicle
             cbbTypes.Items.Add("Car");
             cbbTypes.Items.Add("Bike");
             cbbTypes.SelectedIndex = 0;
             cbbTypes.DropDownStyle = ComboBoxStyle.DropDownList;
+            //Cbb role user
+            cbbRole.Items.Add("Staff");
+            cbbRole.Items.Add("Admin");
+            cbbRole.SelectedIndex = 0;
+            cbbRole.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         public void ClearData()
@@ -121,14 +138,14 @@ namespace Mobilize
 
         private void gridTransports_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            id = Convert.ToInt32(gridTransports.Rows[e.RowIndex].Cells[0].Value.ToString());
-            txtName.Text = gridTransports.Rows[e.RowIndex].Cells[1].Value.ToString();
-            txtManu.Text = gridTransports.Rows[e.RowIndex].Cells[2].Value.ToString();
-            txtModel.Text = gridTransports.Rows[e.RowIndex].Cells[3].Value.ToString();
-            txtRegis_Year.Text = gridTransports.Rows[e.RowIndex].Cells[4].Value.ToString();
-            txtAddOn.Text = gridTransports.Rows[e.RowIndex].Cells[5].Value.ToString();
-            txtPrice.Text = gridTransports.Rows[e.RowIndex].Cells[6].Value.ToString();
-            if (gridTransports.Rows[e.RowIndex].Cells[7].Value.ToString().Equals("Bike"))
+            id = Convert.ToInt32(gridVehicle.Rows[e.RowIndex].Cells[0].Value.ToString());
+            txtName.Text = gridVehicle.Rows[e.RowIndex].Cells[1].Value.ToString();
+            txtManu.Text = gridVehicle.Rows[e.RowIndex].Cells[2].Value.ToString();
+            txtModel.Text = gridVehicle.Rows[e.RowIndex].Cells[3].Value.ToString();
+            txtRegis_Year.Text = gridVehicle.Rows[e.RowIndex].Cells[4].Value.ToString();
+            txtAddOn.Text = gridVehicle.Rows[e.RowIndex].Cells[5].Value.ToString();
+            txtPrice.Text = gridVehicle.Rows[e.RowIndex].Cells[6].Value.ToString();
+            if (gridVehicle.Rows[e.RowIndex].Cells[7].Value.ToString().Equals("Bike"))
             {
                 cbbTypes.SelectedIndex = 1;
             }
@@ -146,65 +163,70 @@ namespace Mobilize
             string year = txtRegis_Year.Text.Trim();
             string addon = txtAddOn.Text.Trim();
             string price = txtPrice.Text.Trim();
-            string type = (string)cbbTypes.SelectedItem;
+            string type = (string) cbbTypes.SelectedItem;
             double test;
-            if (addon.Length == 0 || addon.Length > 255)
+            if (name.Length > 255 || name.Length == 0)
             {
-                MessageBox.Show(@"Emai must be followed the format");
+                MessageBox.Show(@"Name cannot be left blank or over 255 characters");
+            }
+            else if (manu.Length > 100 || manu.Length == 0)
+            {
+                MessageBox.Show(@"Manufactures cannot be left blank or over 100 characters");
+            }
+            else if (model.Length > 100 || model.Length == 0)
+            {
+                MessageBox.Show(@"Model cannot be left blank or over 100 characters");
+            }
+            else if (addon.Length == 0 || addon.Length > 255)
+            {
+                MessageBox.Show(@"Add-on cannot be left blank or over 255 characters");
             }
             else if (year.Length != 4 || !Regex.IsMatch(year, @"^\d+$"))
             {
-                MessageBox.Show(@"Emai must be followed the format");
-            }else if (!Double.TryParse(price, out test))
+                MessageBox.Show(@"Year must contain 4 characters and number only");
+            }
+            else if (!Double.TryParse(price, out test))
             {
-                MessageBox.Show(@"Emai must be followed the format");
-            }else if (name.Length > 255 || name.Length == 0)
-            {
-                MessageBox.Show(@"Emai must be followed the format");
-            }else if (manu.Length > 100 || manu.Length == 0)
-            {
-                MessageBox.Show(@"Emai must be followed the format");
-            }else if (model.Length > 100 || model.Length == 0)
-            {
-                MessageBox.Show(@"Emai must be followed the format");
+                MessageBox.Show(@"Price must be nummerics");
             }
             else
             {
-                dm.ConnectDb();
-                int success = dm.InsertData("Vehicles",
-                    new string[] { "name", "manufacturers", "model", "registration_year", "add_on", "price_hour", "type" },
-                    new object[] { name, manu, model, year, addon, price, type });
+                _dm.ConnectDb();
+                int success = _dm.InsertData("Vehicles",
+                    new string[] {"name", "manufacturers", "model", "registration_year", "add_on", "price_hour", "type"},
+                    new object[] {name, manu, model, year, addon, price, type});
                 if (success > 0)
                 {
-                    MessageBox.Show(@"Emai must be followed the format");
+                    MessageBox.Show(@"Add new vehicle successful");
                     DisplayData();
                     ClearData();
                 }
                 else
                 {
-                    MessageBox.Show(@"Emai must be followed the format");
+                    MessageBox.Show(@"Failure when adding! Please contact with technical");
                 }
-                if (dm.connection.State == ConnectionState.Open)
+                if (_dm.connection.State == ConnectionState.Open)
                 {
-                    dm.connection.Close();
+                    _dm.connection.Close();
                 }
             }
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            dm.ConnectDb();
+            _dm.ConnectDb();
             adapt = null;
-            gridTransports.DataSource = null;
+            gridVehicle.DataSource = null;
             DataTable dataTable = new DataTable();
             string name = txtName.Text.Trim();
-            string type = (string)cbbTypes.SelectedItem;
-            adapt = new SqlDataAdapter("SELECT * FROM Vehicles WHERE name LIKE '%"+name+"%' AND type='"+type+"'", dm.connection);
+            string type = (string) cbbTypes.SelectedItem;
+            adapt = new SqlDataAdapter(
+                "SELECT * FROM Vehicles WHERE name LIKE '%" + name + "%' AND type='" + type + "'", _dm.connection);
             adapt.Fill(dataTable);
-            gridTransports.DataSource = dataTable;
-            if (dm.connection.State == ConnectionState.Open)
+            gridVehicle.DataSource = dataTable;
+            if (_dm.connection.State == ConnectionState.Open)
             {
-                dm.connection.Close();
+                _dm.connection.Close();
             }
         }
 
@@ -219,13 +241,120 @@ namespace Mobilize
             if (tabControl1.SelectedIndex == 0)
             {
                 DisplayData();
-            }else if (tabControl1.SelectedIndex == 1)
+                AcceptButton = btnInsert;
+            }
+            else if (tabControl1.SelectedIndex == 1)
             {
                 DisplayOrder();
+                
             }
             else
             {
                 DisplayUser();
+                AcceptButton = btnRegister;
+            }
+        }
+
+        private void btnRegister_Click(object sender, EventArgs e)
+        {
+            string regEmail = txtRegEmail.Text.Trim();
+            string regPassword = txtRegPassword.Text.Trim();
+            string fullname = txtFullNam.Text.Trim();
+            string phone = txtPhone.Text.Trim();
+            string role = (string) cbbRole.SelectedItem;
+
+            if (regEmail.Length == 0 || regEmail.Length > 255)
+            {
+                MessageBox.Show(@"Email cannot be left blank or over 255 characters");
+            }
+            else if (regPassword.Length > 255 || regPassword.Length == 0)
+            {
+                MessageBox.Show(@"Password cannot be left blank or over 255 characters");
+            }
+            else if (fullname.Length == 0 || fullname.Length > 255)
+            {
+                MessageBox.Show(@"Fullname cannot be left blank or over 255 characters");
+            }
+            else if (phone.Length == 0 || phone.Length > 20)
+            {
+                MessageBox.Show(@"Phone cannot be left blank or over 20 characters");
+            }
+            else if (!Regex.IsMatch(phone, @"^\d+$"))
+            {
+                MessageBox.Show(@"Phone must contain numbers only");
+            }
+            else if (!_login.IsValidEmail(regEmail))
+            {
+                MessageBox.Show(@"Emai must be followed the format");
+            }
+            else if (_login.IsExisted(regEmail))
+            {
+                MessageBox.Show(@"Email is existed. Please choose other email");
+            }
+            else
+            {
+                _dm.ConnectDb();
+                int success = _dm.InsertData("[Users]",
+                    new string[] {"email", "password", "fullname", "phone", "role"},
+                    new object[] {regEmail, regPassword, fullname, phone, role});
+                if (success > 0)
+                {
+                    MessageBox.Show(@"Add new User successful");
+                    DisplayUser();
+                    ClearDataUser();
+                }
+                else
+                {
+                    MessageBox.Show(@"Failure when adding! Please contact with technical");
+                }
+                if (_dm.connection.State == ConnectionState.Open)
+                {
+                    _dm.connection.Close();
+                }
+            }
+        }
+
+        private void gridVehicle_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            MessageBox.Show("Testing id vehicle is " + id);
+        }
+
+        private void gridUser_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            email_user = gridUser.Rows[e.RowIndex].Cells[0].Value.ToString();
+        }
+
+        private void btnResetPass_Click(object sender, EventArgs e)
+        {
+            if (email_user.Length == 0)
+            {
+                MessageBox.Show(@"Please choose user before reset password");
+            }
+            else
+            {
+                switch (MessageBox.Show(this,
+                    "Are you sure you want to reset password of " + email_user + "?", "Closing", MessageBoxButtons.YesNo)
+                )
+                {
+                    case DialogResult.Yes:
+                        _dm.ConnectDb();
+                        int success = _dm.UpdateData("[Users]",
+                            new string[] {"password", "email"},
+                            new object[] {123456, email_user });
+                        if (success > 0)
+                        {
+                            MessageBox.Show(@"Reset password for " + email_user + @" successful");
+                        }
+                        else
+                        {
+                            MessageBox.Show(@"Reset password fail");
+                        }
+                        if (_dm.connection.State == ConnectionState.Open)
+                        {
+                            _dm.connection.Close();
+                        }
+                        break;
+                }
             }
         }
     }

@@ -21,7 +21,7 @@ namespace Mobilize.database
             }
             catch (SqlException sql)
             {
-                MessageBox.Show(@"Emai must be followed the format");
+                MessageBox.Show(@"Error at open connection to database");
                 connection.Close();
                 Environment.Exit(0);
             }
@@ -69,7 +69,7 @@ namespace Mobilize.database
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Unknow error at insertdata function " + ex.Message);
+                MessageBox.Show(@"Error at insert function in Dm " + ex.Message);
                 connection.Close();
             }
             return row;
@@ -106,7 +106,7 @@ namespace Mobilize.database
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Emai must be followed the format");
+                MessageBox.Show(@"Error at update function in Dm " + ex.Message);
                 connection.Close();
             }
             return row;
@@ -131,7 +131,7 @@ namespace Mobilize.database
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Emai must be followed the format");
+                MessageBox.Show(@"Error at delete function in Dm " + ex.Message);
                 connection.Close();
             }
             return row;

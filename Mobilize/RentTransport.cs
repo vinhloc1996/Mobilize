@@ -18,8 +18,6 @@ namespace Mobilize
         {
             InitializeComponent();
             dm = new Dm();
-            DisplayData();
-//            lblEmail.Text = email;
             this.Text = "Mobilize - " + email;
             emails = email;
         }
@@ -33,21 +31,7 @@ namespace Mobilize
         {
             (dataGridView1.DataSource as DataTable).DefaultView.RowFilter = string.Format("name like '%{0}%'", txtFilter.Text.Trim());
         }
-
-        public void DisplayData()
-        {
-            dm.ConnectDb();
-            DataTable dataTable = new DataTable();
-            SqlDataAdapter adapt = new SqlDataAdapter("SELECT * FROM Vehicles", dm.connection);
-            adapt.Fill(dataTable);
-            dataGridView1.DataSource = dataTable;
-            dataGridView1.Columns[0].Visible = false;
-            dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            if (dm.connection.State == ConnectionState.Open)
-            {
-                dm.connection.Close();
-            }
-        }
+        
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
@@ -74,20 +58,8 @@ namespace Mobilize
             }
         }
 
-        private void dataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            id_transport = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
-            name = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
-            type = dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
-            price = Convert.ToDouble(dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString());
-            lblPrice.Text = price.ToString();
-            label3.Text = name;
-            lblType.Text = type;
-        }
-
         private void btnRent_Click(object sender, EventArgs e)
         {
-            string email = lblEmail.Text;
             if (id_transport <= 0)
             {
                 MessageBox.Show(@"Emai must be followed the format");
@@ -143,6 +115,11 @@ namespace Mobilize
             {
                 MessageBox.Show(@"Emai must be followed the format");
             }
+        }
+
+        private void btnCancle_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

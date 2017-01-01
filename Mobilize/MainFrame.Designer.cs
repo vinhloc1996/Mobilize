@@ -33,7 +33,7 @@
             this.btnReset = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.btnInsert = new System.Windows.Forms.Button();
-            this.gridTransports = new System.Windows.Forms.DataGridView();
+            this.gridVehicle = new System.Windows.Forms.DataGridView();
             this.cbbTypes = new System.Windows.Forms.ComboBox();
             this.txtPrice = new System.Windows.Forms.TextBox();
             this.txtAddOn = new System.Windows.Forms.TextBox();
@@ -54,9 +54,21 @@
             this.tabUser = new System.Windows.Forms.TabPage();
             this.label8 = new System.Windows.Forms.Label();
             this.gridUser = new System.Windows.Forms.DataGridView();
+            this.btnResetPass = new System.Windows.Forms.Button();
+            this.cbbRole = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.btnRegister = new System.Windows.Forms.Button();
+            this.txtPhone = new System.Windows.Forms.TextBox();
+            this.txtFullNam = new System.Windows.Forms.TextBox();
+            this.txtRegPassword = new System.Windows.Forms.TextBox();
+            this.txtRegEmail = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabTransport.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridTransports)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridVehicle)).BeginInit();
             this.tabOrder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridOrder)).BeginInit();
             this.tabUser.SuspendLayout();
@@ -80,7 +92,7 @@
             this.tabTransport.Controls.Add(this.btnReset);
             this.tabTransport.Controls.Add(this.btnSearch);
             this.tabTransport.Controls.Add(this.btnInsert);
-            this.tabTransport.Controls.Add(this.gridTransports);
+            this.tabTransport.Controls.Add(this.gridVehicle);
             this.tabTransport.Controls.Add(this.cbbTypes);
             this.tabTransport.Controls.Add(this.txtPrice);
             this.tabTransport.Controls.Add(this.txtAddOn);
@@ -133,17 +145,18 @@
             this.btnInsert.UseVisualStyleBackColor = true;
             this.btnInsert.Click += new System.EventHandler(this.btnInsert_Click);
             // 
-            // gridTransports
+            // gridVehicle
             // 
-            this.gridTransports.AllowUserToAddRows = false;
-            this.gridTransports.AllowUserToDeleteRows = false;
-            this.gridTransports.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridTransports.Location = new System.Drawing.Point(7, 194);
-            this.gridTransports.Name = "gridTransports";
-            this.gridTransports.ReadOnly = true;
-            this.gridTransports.Size = new System.Drawing.Size(861, 192);
-            this.gridTransports.TabIndex = 14;
-            this.gridTransports.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridTransports_RowHeaderMouseClick);
+            this.gridVehicle.AllowUserToAddRows = false;
+            this.gridVehicle.AllowUserToDeleteRows = false;
+            this.gridVehicle.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridVehicle.Location = new System.Drawing.Point(7, 194);
+            this.gridVehicle.Name = "gridVehicle";
+            this.gridVehicle.ReadOnly = true;
+            this.gridVehicle.Size = new System.Drawing.Size(861, 192);
+            this.gridVehicle.TabIndex = 14;
+            this.gridVehicle.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridTransports_RowHeaderMouseClick);
+            this.gridVehicle.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridVehicle_RowHeaderMouseDoubleClick);
             // 
             // cbbTypes
             // 
@@ -286,14 +299,26 @@
             this.gridOrder.AllowUserToAddRows = false;
             this.gridOrder.AllowUserToDeleteRows = false;
             this.gridOrder.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridOrder.Location = new System.Drawing.Point(6, 73);
+            this.gridOrder.Location = new System.Drawing.Point(7, 248);
             this.gridOrder.Name = "gridOrder";
             this.gridOrder.ReadOnly = true;
-            this.gridOrder.Size = new System.Drawing.Size(861, 176);
+            this.gridOrder.Size = new System.Drawing.Size(861, 138);
             this.gridOrder.TabIndex = 0;
             // 
             // tabUser
             // 
+            this.tabUser.Controls.Add(this.btnResetPass);
+            this.tabUser.Controls.Add(this.cbbRole);
+            this.tabUser.Controls.Add(this.label13);
+            this.tabUser.Controls.Add(this.btnRegister);
+            this.tabUser.Controls.Add(this.txtPhone);
+            this.tabUser.Controls.Add(this.txtFullNam);
+            this.tabUser.Controls.Add(this.txtRegPassword);
+            this.tabUser.Controls.Add(this.txtRegEmail);
+            this.tabUser.Controls.Add(this.label9);
+            this.tabUser.Controls.Add(this.label10);
+            this.tabUser.Controls.Add(this.label11);
+            this.tabUser.Controls.Add(this.label12);
             this.tabUser.Controls.Add(this.label8);
             this.tabUser.Controls.Add(this.gridUser);
             this.tabUser.Location = new System.Drawing.Point(4, 22);
@@ -320,11 +345,115 @@
             this.gridUser.AllowUserToAddRows = false;
             this.gridUser.AllowUserToDeleteRows = false;
             this.gridUser.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridUser.Location = new System.Drawing.Point(6, 275);
+            this.gridUser.Location = new System.Drawing.Point(6, 227);
             this.gridUser.Name = "gridUser";
             this.gridUser.ReadOnly = true;
-            this.gridUser.Size = new System.Drawing.Size(862, 111);
+            this.gridUser.Size = new System.Drawing.Size(862, 159);
             this.gridUser.TabIndex = 0;
+            this.gridUser.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridUser_RowHeaderMouseClick);
+            // 
+            // btnResetPass
+            // 
+            this.btnResetPass.Location = new System.Drawing.Point(640, 174);
+            this.btnResetPass.Name = "btnResetPass";
+            this.btnResetPass.Size = new System.Drawing.Size(110, 23);
+            this.btnResetPass.TabIndex = 23;
+            this.btnResetPass.Text = "Reset Password";
+            this.btnResetPass.UseVisualStyleBackColor = true;
+            this.btnResetPass.Click += new System.EventHandler(this.btnResetPass_Click);
+            // 
+            // cbbRole
+            // 
+            this.cbbRole.FormattingEnabled = true;
+            this.cbbRole.Location = new System.Drawing.Point(531, 69);
+            this.cbbRole.Name = "cbbRole";
+            this.cbbRole.Size = new System.Drawing.Size(121, 21);
+            this.cbbRole.TabIndex = 22;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(488, 72);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(29, 13);
+            this.label13.TabIndex = 21;
+            this.label13.Text = "Role";
+            // 
+            // btnRegister
+            // 
+            this.btnRegister.Location = new System.Drawing.Point(504, 174);
+            this.btnRegister.Name = "btnRegister";
+            this.btnRegister.Size = new System.Drawing.Size(110, 23);
+            this.btnRegister.TabIndex = 20;
+            this.btnRegister.Text = "Register";
+            this.btnRegister.UseVisualStyleBackColor = true;
+            this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
+            // 
+            // txtPhone
+            // 
+            this.txtPhone.Location = new System.Drawing.Point(193, 181);
+            this.txtPhone.Name = "txtPhone";
+            this.txtPhone.Size = new System.Drawing.Size(168, 20);
+            this.txtPhone.TabIndex = 19;
+            // 
+            // txtFullNam
+            // 
+            this.txtFullNam.Location = new System.Drawing.Point(193, 144);
+            this.txtFullNam.Name = "txtFullNam";
+            this.txtFullNam.Size = new System.Drawing.Size(168, 20);
+            this.txtFullNam.TabIndex = 18;
+            // 
+            // txtRegPassword
+            // 
+            this.txtRegPassword.Location = new System.Drawing.Point(193, 107);
+            this.txtRegPassword.Name = "txtRegPassword";
+            this.txtRegPassword.PasswordChar = '*';
+            this.txtRegPassword.Size = new System.Drawing.Size(168, 20);
+            this.txtRegPassword.TabIndex = 17;
+            this.txtRegPassword.UseSystemPasswordChar = true;
+            // 
+            // txtRegEmail
+            // 
+            this.txtRegEmail.Location = new System.Drawing.Point(193, 69);
+            this.txtRegEmail.Name = "txtRegEmail";
+            this.txtRegEmail.Size = new System.Drawing.Size(168, 20);
+            this.txtRegEmail.TabIndex = 16;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(136, 184);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(38, 13);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "Phone";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(136, 147);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(52, 13);
+            this.label10.TabIndex = 14;
+            this.label10.Text = "Full name";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(136, 110);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 13);
+            this.label11.TabIndex = 13;
+            this.label11.Text = "Password";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(136, 72);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(32, 13);
+            this.label12.TabIndex = 12;
+            this.label12.Text = "Email";
             // 
             // mainFrame
             // 
@@ -333,11 +462,11 @@
             this.ClientSize = new System.Drawing.Size(906, 442);
             this.Controls.Add(this.tabControl1);
             this.Name = "mainFrame";
-            this.Text = "Mobilize - Staff Frame";
+            this.Text = "Mobilize";
             this.tabControl1.ResumeLayout(false);
             this.tabTransport.ResumeLayout(false);
             this.tabTransport.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridTransports)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridVehicle)).EndInit();
             this.tabOrder.ResumeLayout(false);
             this.tabOrder.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridOrder)).EndInit();
@@ -368,7 +497,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.ComboBox cbbTypes;
-        private System.Windows.Forms.DataGridView gridTransports;
+        private System.Windows.Forms.DataGridView gridVehicle;
         private System.Windows.Forms.Button btnInsert;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Button btnReset;
@@ -376,5 +505,17 @@
         private System.Windows.Forms.DataGridView gridOrder;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.DataGridView gridUser;
+        private System.Windows.Forms.Button btnResetPass;
+        private System.Windows.Forms.ComboBox cbbRole;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btnRegister;
+        private System.Windows.Forms.TextBox txtPhone;
+        private System.Windows.Forms.TextBox txtFullNam;
+        private System.Windows.Forms.TextBox txtRegPassword;
+        private System.Windows.Forms.TextBox txtRegEmail;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
     }
 }
