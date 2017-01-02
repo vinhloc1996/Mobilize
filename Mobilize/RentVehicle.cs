@@ -21,6 +21,7 @@ namespace Mobilize
         {
             InitializeComponent();
             _dm = new Dm();
+            
             Text = @"Order Form";
             _emails = userEmail;
             _id = idVehicle;
@@ -46,30 +47,30 @@ namespace Mobilize
             }
         }
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            try
-            {
-                base.OnFormClosing(e);
-
-                if (e.CloseReason == CloseReason.WindowsShutDown) return;
-
-                // Confirm user wants to close
-                switch (MessageBox.Show(this, @"Are you sure you want to close?", @"Closing", MessageBoxButtons.YesNo))
-                {
-                    case DialogResult.No:
-                        e.Cancel = true;
-                        break;
-                    case DialogResult.Yes:
-                        Dispose();
-                        break;
-                }
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show(@"Error when closing windows " + exp.Message);
-            }
-        }
+//        protected override void OnFormClosing(FormClosingEventArgs e)
+//        {
+//            try
+//            {
+//                base.OnFormClosing(e);
+//
+//                if (e.CloseReason == CloseReason.WindowsShutDown) return;
+//
+//                // Confirm user wants to close
+//                switch (MessageBox.Show(this, @"Are you sure you want to close?", @"Closing", MessageBoxButtons.YesNo))
+//                {
+//                    case DialogResult.No:
+//                        e.Cancel = true;
+//                        break;
+//                    case DialogResult.Yes:
+//                        //Dispose();
+//                        break;
+//                }
+//            }
+//            catch (Exception exp)
+//            {
+//                MessageBox.Show(@"Error when closing windows " + exp.Message);
+//            }
+//        }
 
         private void btnRent_Click(object sender, EventArgs e)
         {
