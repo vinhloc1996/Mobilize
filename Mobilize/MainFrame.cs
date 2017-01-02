@@ -92,7 +92,8 @@ namespace Mobilize
             _dm.ConnectDb();
             DataTable dataTable = new DataTable();
 
-            _adapt = new SqlDataAdapter("SELECT * FROM Vehicles WHERE id NOT IN (SELECT vehicle_id FROM Orders)", _dm.Connection);
+            _adapt = new SqlDataAdapter(/*"SELECT * FROM Vehicles WHERE id NOT IN (SELECT vehicle_id FROM Orders)"*/
+                "SELECT * FROM Vehicles", _dm.Connection);
             _adapt.Fill(dataTable);
             gridVehicle.DataSource = dataTable;
             gridVehicle.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
