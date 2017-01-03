@@ -49,9 +49,11 @@ namespace Mobilize
 
         private void btnRent_Click(object sender, EventArgs e)
         {
+            //Get all values from input fields
             string cusName = txtCusName.Text.Trim();
             string cusPhone = txtCusPhone.Text.Trim();
             string time = txtTime.Text.Trim();
+            #region Validate Form Order Vehicle
             if (cusName.Length == 0)
             {
                 MessageBox.Show(@"Customer Name cannot be left blank");
@@ -68,34 +70,33 @@ namespace Mobilize
             {
                 MessageBox.Show(@"Please enter hour rent of vehicle");
             }
+            #endregion
             else
             {
-                switch (
-                    MessageBox.Show(this, @"Are your sure you want to rent this vehicle?", @"Closing",
-                        MessageBoxButtons.YesNo))
+                switch (MessageBox.Show(this, @"Are your sure you want to rent this vehicle?", @"Closing",
+                        MessageBoxButtons.YesNo))   //Ask for confirming the order
                 {
                     case DialogResult.Yes:
-                        _dm.ConnectDb();
+                        _dm.ConnectDb();    //Connect DB
                         int success = _dm.InsertData("[Orders]",
-                            new[]
-                            {
-                                "cus_name", "cus_phone", "user_email", "vehicle_id", "rent_hour", "subtotal",
-                                "create_date"
-                            },
-                            new object[] {cusName, cusPhone, _emails, _id, time, _total, _curDate});
-                        if (success > 0)
+                            new[] {"cus_name", "cus_phone", "user_email", "vehicle_id", "rent_hour", "subtotal", "create_date"},
+                            new object[] {cusName, cusPhone, _emails, _id, time, _total, _curDate});    //Excute Create Order
+                        if (success > 0)    //Check if insert is succeed
                         {
                             MessageBox.Show(@"Rent Vehicle successful");
-                            Dispose();
+                            Dispose();      //Close this windows if succeed
                         }
                         else
                         {
                             MessageBox.Show(@"Rent Vehicle Failure");
                         }
+
+                        #region Close Connection
                         if (_dm.Connection.State == ConnectionState.Open)
                         {
                             _dm.Connection.Close();
                         }
+                        #endregion
                         break;
                 }
             }

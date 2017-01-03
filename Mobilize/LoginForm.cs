@@ -37,22 +37,22 @@ namespace Mobilize
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            _dm.ConnectDb();
+            _dm.ConnectDb();    //Connect to DB
             string email = txtEmail.Text.Trim();
-            string data = "Select * From [Users] Where email = '" + email + "'";
+            string query = "Select * From [Users] Where email = '" + email + "'";
             string password = txtPass.Text.Trim();
-            SqlDataReader reader = _dm.SelectData(data);
-            if (!IsValidEmail(email))
+            SqlDataReader reader = _dm.SelectData(query);    //Get Users from DB by query
+            if (!IsValidEmail(email))   //Check if email is valid
             {
                 MessageBox.Show(@"Emai must be followed the format");
             }
             else
             {
-                if (reader != null)
+                if (reader != null)    //Check if email is existed in DB
                 {
-                    if (password.Equals(reader.GetString(1)))
+                    if (password.Equals(reader.GetString(1)))    //Check if password is equaled in DB
                     {
-                        _main = new MainFrame(email, reader.GetString(4));
+                        _main = new MainFrame(email, reader.GetString(4));    //Show main frame
                         _main.Show();
                         Hide();
                     }
@@ -66,10 +66,12 @@ namespace Mobilize
                     MessageBox.Show(@"Invalid Email");
                 }
             }
+            #region Close Connection
             if (_dm.Connection.State == ConnectionState.Open)
             {
                 _dm.Connection.Close();
             }
+            #endregion
         }
 
         public bool IsExisted(string email)

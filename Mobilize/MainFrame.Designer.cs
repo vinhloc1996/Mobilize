@@ -49,6 +49,8 @@
             this.txtName = new System.Windows.Forms.TextBox();
             this.name = new System.Windows.Forms.Label();
             this.tabOrder = new System.Windows.Forms.TabPage();
+            this.txtFilter = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.cbbMonthYear = new System.Windows.Forms.ComboBox();
             this.lblMonthYear = new System.Windows.Forms.Label();
             this.btnExport = new System.Windows.Forms.Button();
@@ -70,8 +72,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.gridUser = new System.Windows.Forms.DataGridView();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.label14 = new System.Windows.Forms.Label();
-            this.txtFilter = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabTransport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridVehicle)).BeginInit();
@@ -118,7 +118,7 @@
             this.tabTransport.Padding = new System.Windows.Forms.Padding(3);
             this.tabTransport.Size = new System.Drawing.Size(874, 392);
             this.tabTransport.TabIndex = 0;
-            this.tabTransport.Text = "Transport";
+            this.tabTransport.Text = "Vehicle";
             this.tabTransport.UseVisualStyleBackColor = true;
             // 
             // btnReset
@@ -293,6 +293,23 @@
             this.tabOrder.TabIndex = 1;
             this.tabOrder.Text = "Order";
             this.tabOrder.UseVisualStyleBackColor = true;
+            // 
+            // txtFilter
+            // 
+            this.txtFilter.Location = new System.Drawing.Point(149, 59);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(167, 20);
+            this.txtFilter.TabIndex = 6;
+            this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(36, 62);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(107, 13);
+            this.label14.TabIndex = 5;
+            this.label14.Text = "Filter Customer Name";
             // 
             // cbbMonthYear
             // 
@@ -492,23 +509,6 @@
             this.gridUser.Size = new System.Drawing.Size(862, 159);
             this.gridUser.TabIndex = 0;
             this.gridUser.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridUser_RowHeaderMouseClick);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(36, 62);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(107, 13);
-            this.label14.TabIndex = 5;
-            this.label14.Text = "Filter Customer Name";
-            // 
-            // txtFilter
-            // 
-            this.txtFilter.Location = new System.Drawing.Point(149, 59);
-            this.txtFilter.Name = "txtFilter";
-            this.txtFilter.Size = new System.Drawing.Size(167, 20);
-            this.txtFilter.TabIndex = 6;
-            this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
             // MainFrame
             // 

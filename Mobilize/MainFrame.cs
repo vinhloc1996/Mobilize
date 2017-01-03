@@ -167,6 +167,7 @@ namespace Mobilize
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
+            //Get all values from input fields
             string nameVehicle = txtName.Text.Trim();
             string manu = txtManu.Text.Trim();
             string model = txtModel.Text.Trim();
@@ -175,6 +176,7 @@ namespace Mobilize
             string price = txtPrice.Text.Trim();
             string type = (string) cbbTypes.SelectedItem;
             double test;
+            #region Validate Form Insert Vehicle
             if (nameVehicle.Length > 255 || nameVehicle.Length == 0)
             {
                 MessageBox.Show(@"Name cannot be left blank or over 255 characters");
@@ -199,13 +201,14 @@ namespace Mobilize
             {
                 MessageBox.Show(@"Price must be nummerics");
             }
+            #endregion
             else
             {
-                _dm.ConnectDb();
+                _dm.ConnectDb();    //Connect to DB
                 int success = _dm.InsertData("Vehicles",
                     new[] {"name", "manufacturers", "model", "registration_year", "add_on", "price_hour", "type"},
-                    new object[] {nameVehicle, manu, model, year, addon, price, type});
-                if (success > 0)
+                    new object[] {nameVehicle, manu, model, year, addon, price, type});    //Excute insert Vehicle into DB
+                if (success > 0)    //Check if insert is succeed
                 {
                     MessageBox.Show(@"Add new vehicle successful");
                     DisplayData();
@@ -215,10 +218,12 @@ namespace Mobilize
                 {
                     MessageBox.Show(@"Failure when adding! Please contact with technical");
                 }
+                #region Close Connection
                 if (_dm.Connection.State == ConnectionState.Open)
                 {
                     _dm.Connection.Close();
                 }
+                #endregion
             }
         }
 
@@ -266,12 +271,13 @@ namespace Mobilize
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
+            //Get all values from input fields
             string regEmail = txtRegEmail.Text.Trim();
             string regPassword = txtRegPassword.Text.Trim();
             string fullname = txtFullNam.Text.Trim();
             string phone = txtPhone.Text.Trim();
             string role = (string) cbbRole.SelectedItem;
-
+            #region Validate Form Insert User
             if (regEmail.Length == 0 || regEmail.Length > 255)
             {
                 MessageBox.Show(@"Email cannot be left blank or over 255 characters");
@@ -300,26 +306,29 @@ namespace Mobilize
             {
                 MessageBox.Show(@"Email is existed. Please choose other email");
             }
+#endregion  
             else
             {
-                _dm.ConnectDb();
+                _dm.ConnectDb();    //Connect to DB
                 int success = _dm.InsertData("[Users]",
                     new[] {"email", "password", "fullname", "phone", "role"},
-                    new object[] {regEmail, regPassword, fullname, phone, role});
-                if (success > 0)
+                    new object[] {regEmail, regPassword, fullname, phone, role});   //Excute Insert to DB
+                if (success > 0)    //Check if insert succeed 
                 {
                     MessageBox.Show(@"Add new User successful");
-                    DisplayUser();
-                    ClearDataUser();
+                    DisplayUser();      //Reload Data User
+                    ClearDataUser();    //Clear Input fields
                 }
                 else
                 {
                     MessageBox.Show(@"Failure when adding! Please contact with technical");
                 }
+                #region Close Connection
                 if (_dm.Connection.State == ConnectionState.Open)
                 {
                     _dm.Connection.Close();
                 }
+                #endregion
             }
         }
 
@@ -327,7 +336,7 @@ namespace Mobilize
         {
             RentVehicle rent = new RentVehicle(_curEmail, _id);
             rent.ShowDialog();
-            DisplayData();
+//            DisplayData();
         }
 
         private void gridUser_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -412,20 +421,20 @@ namespace Mobilize
 
         private void btnExport_Click(object sender, EventArgs e)
         {
-            string monthYear = (string) cbbMonthYear.SelectedItem;
-            string[] abc = monthYear.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            saveFileDialog1.FileName = "Report Orders " + abc[0] + "-" + abc[1] + ".xlsx";
-            saveFileDialog1.Filter = @"Excel 2007 files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+            string monthYear = (string) cbbMonthYear.SelectedItem;  //Get time to export
+            string[] abc = monthYear.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);  //Array with month-year
+            saveFileDialog1.FileName = "Report Orders " + abc[0] + "-" + abc[1] + ".xlsx";  //Default name of file
+            saveFileDialog1.Filter = @"Excel 2007 files (*.xlsx)|*.xlsx|All files (*.*)|*.*";   //Filter file extension
             saveFileDialog1.FilterIndex = 1;
-            saveFileDialog1.RestoreDirectory = true;
+            saveFileDialog1.RestoreDirectory = true;    
             saveFileDialog1.OverwritePrompt = false;
             if (saveFileDialog1.ShowDialog() != DialogResult.OK)
                 return;
-            string targetFilename = saveFileDialog1.FileName;
-            DataSet ds = GetDataOrders(abc);
+            string targetFilename = saveFileDialog1.FileName;   //Current file name
+            DataSet ds = GetDataOrders(abc);    //Get all orders between the selected time
             try
             {
-                CreateExcelFile.CreateExcelDocument(ds, targetFilename);
+                CreateExcelFile.CreateExcelDocument(ds, targetFilename);    //Create file excel
             }
             catch (Exception ex)
             {

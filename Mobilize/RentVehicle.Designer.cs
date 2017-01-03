@@ -86,7 +86,7 @@
             this.btnCancle.Name = "btnCancle";
             this.btnCancle.Size = new System.Drawing.Size(75, 28);
             this.btnCancle.TabIndex = 27;
-            this.btnCancle.Text = "Cancle";
+            this.btnCancle.Text = "Cancel";
             this.btnCancle.UseVisualStyleBackColor = true;
             this.btnCancle.Click += new System.EventHandler(this.btnCancle_Click);
             // 
@@ -164,7 +164,7 @@
             this.txtSubTotal.Size = new System.Drawing.Size(100, 20);
             this.txtSubTotal.TabIndex = 36;
             // 
-            // RentTransport
+            // RentVehicle
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -183,7 +183,7 @@
             this.Controls.Add(this.txtTime);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.btnRent);
-            this.Name = "RentTransport";
+            this.Name = "RentVehicle";
             this.Text = "MobiLize";
             this.ResumeLayout(false);
             this.PerformLayout();
